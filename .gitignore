@@ -1,0 +1,12 @@
+.git
+__pycache__
+sandbox
+*.py0
+*.py~
+*.wxg~
+*.wxg
+xeq
+venv
+venv39
+tags
+equilibria
