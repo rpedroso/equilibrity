@@ -32,7 +32,7 @@ class AboutPanel(wx.Panel):
         super().__init__(*args, **kwargs)
         info = wx.adv.AboutDialogInfo()
         info.Name = wx.GetApp().GetAppName()
-        info.Version = "0.99.3"
+        info.Version = "0.99.4"  # Move this to version.py
         info.Copyright = "(c) 2024 R.Pedroso"
         info.Description = wordwrap(
             "A lightweight wallet for Equilibria network",
