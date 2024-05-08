@@ -1,0 +1,4 @@
+qrcode>=7.4.2
+# wxPython>=4.2.1
+password-strength>=0.0.3.post2
+PyDispatcher>=2.0.7
