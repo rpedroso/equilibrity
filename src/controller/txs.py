@@ -30,7 +30,7 @@ class Txs:
         txinfo.ui.ShowModal()
         txinfo.ui.Destroy()
 
-    def on_search(self, evt):
+    def on_search(self, evt=None):
         value = self.ui.search.GetValue().lower()
         if not value:
             self.ui.txs.set_data(self.data)
@@ -43,7 +43,8 @@ class Txs:
 
         self.ui.txs.set_data(data)
 
-        evt.Skip()
+        if evt:
+            evt.Skip()
 
     def on_wallet_open(self, status, reason):
         print('**** Txs.on_wallet_open ***')
@@ -76,5 +77,7 @@ class Txs:
                 Wallet.get_note(item.hash()),
                 f"-{amount}" if item.direction() else f"+{amount}",
                 ))
-        self.ui.txs.set_data(data)
+
         self.data = data
+        self.on_search()
+        # self.ui.txs.set_data(data)
