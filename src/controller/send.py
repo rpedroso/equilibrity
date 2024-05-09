@@ -42,7 +42,9 @@ TxId: {tx.tx_id()}
             Wallet.set_note(tx.tx_id()[0], note)
             tx.commit()
             # evt.Skip()
-            # dlg.Destroy()
+            dlg.Destroy()
+            self.ui.Destroy()
+            Wallet.history(refresh=True)
 
     def on_btn_amount_max(self, evt):
         self.ui.txt_amount.Value = Wallet.display_amount(Wallet.balance())

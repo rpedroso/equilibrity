@@ -7,15 +7,21 @@ class Balance:
     def __init__(self, controller):
         self.ui = controller.frame.pan_balance
         dispatcher.connect(self.on_wallet_open, 'EVT_WALLET_OPEN')
-        dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
+        dispatcher.connect(self.on_wallet_history, 'EVT_WALLET_HISTORY')
+        dispatcher.connect(self.on_wallet_unconfirmed_money_received,
+                           'EVT_WALLET_UNCONFIRMED_MONEY_RECEIVED')
 
     def on_wallet_open(self, status, reason):
         logging.debug('Balance.on_wallet_open %r', status)
         if status is True:
             self.balance_update()
 
-    def on_wallet_new_block(self, height):
-        logging.debug('Balance.on_wallet_new_block %r', height)
+    def on_wallet_history(self):
+        logging.debug('Balance.on_wallet_history')
+        self.balance_update()
+
+    def on_wallet_unconfirmed_money_received(self, tx_id, amount):
+        logging.debug('Balance.on_unconfirmed_money_received')
         self.balance_update()
 
     def balance_update(self):

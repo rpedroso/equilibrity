@@ -18,6 +18,8 @@ class Txs:
         dispatcher.connect(self.on_wallet_open, 'EVT_WALLET_OPEN')
         dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
         dispatcher.connect(self.on_wallet_history, 'EVT_WALLET_HISTORY')
+        dispatcher.connect(self.on_wallet_unconfirmed_money_received,
+                           'EVT_WALLET_UNCONFIRMED_MONEY_RECEIVED')
 
         self.ui.search.Bind(wx.EVT_TEXT_ENTER, self.on_search)
         self.ui.search.Bind(wx.EVT_TEXT, self.on_search)
@@ -82,3 +84,7 @@ class Txs:
         self.data = data
         self.on_search()
         # self.ui.txs.set_data(data)
+
+    def on_wallet_unconfirmed_money_received(self, tx_id, amount):
+        h = Wallet.history(False)
+        self.on_wallet_history(h)
