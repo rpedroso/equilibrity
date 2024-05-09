@@ -1,3 +1,4 @@
+import logging
 from lib.wallet import Wallet
 from pydispatch import dispatcher
 
@@ -9,12 +10,12 @@ class Balance:
         dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
 
     def on_wallet_open(self, status, reason):
-        print('**** Balance.on_wallet_open ***', status)
+        logging.debug('Balance.on_wallet_open %r', status)
         if status is True:
             self.balance_update()
 
     def on_wallet_new_block(self, height):
-        print('**** Balance.on_wallet_new_block ***', height)
+        logging.debug('Balance.on_wallet_new_block %r', height)
         self.balance_update()
 
     def balance_update(self):

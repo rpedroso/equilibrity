@@ -80,7 +80,6 @@ class Controller:
             wx.CallAfter(f, reason)
 
     def on_wallet_init(self):
-        print('**** Controller.on_wallet_init ****')
         logging.debug('Controller.on_wallet_init')
         self.frame.mni_wallet_properties.Enable(True)
 
@@ -90,11 +89,11 @@ class Controller:
     def on_wallet_refreshed(self):
         if self.should_store:
             self.should_store = False
-            print('Storing wallet')
+            logging.debug('Storing wallet')
             Wallet.store()
 
     def on_frame_close(self, evt):
-        print('**** Controller.on_frame_close ****')
+        logging.debug('Controller.on_frame_close')
         self.frame.Disable()
         # Disconnect everything
         dispatcher.connections = {}

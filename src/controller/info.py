@@ -1,3 +1,4 @@
+import logging
 import wx
 from lib.wallet import Wallet
 from lib import utils
@@ -16,11 +17,11 @@ class Info:
         dispatcher.connect(self.on_wallet_connect, 'EVT_WALLET_CONNECT')
 
     def on_frame_close(self, evt):
-        print('**** Info.on_frame_close ****')
+        logging.debug('Info.on_frame_close')
         evt.Skip()
 
     def on_wallet_open(self, status, reason):
-        print('*** Info.on_wallet_open ***')
+        logging.debug('Info.on_wallet_open')
         if status is True:
             self.ui.status.wallet_connecting()
             height = Wallet.blockchain_height()
@@ -28,7 +29,7 @@ class Info:
             self.ui.Layout()
 
     def on_wallet_connect(self, status, daemon_version):
-        print('**** Info.on_wallet_connect ****', status, daemon_version)
+        logging.debug('Info.on_wallet_connect %r %r ', status, daemon_version)
         if status is True:
             self.ui.status.wallet_connected(Wallet.synchronized())
             self.ui.Layout()

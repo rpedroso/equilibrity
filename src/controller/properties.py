@@ -1,3 +1,4 @@
+import logging
 import wx
 from ui.panel_properties import PanelProperties
 from lib.wallet import Wallet
@@ -9,8 +10,11 @@ class Properties(PanelProperties):
         super().__init__(parent)
         wx.CallAfter(self.update)
 
-        dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
-        dispatcher.connect(self.on_wallet_refreshed, 'EVT_WALLET_REFRESHED')
+        if Wallet.synchronized():
+            dispatcher.connect(self.on_wallet_new_block,
+                               'EVT_WALLET_NEW_BLOCK')
+            dispatcher.connect(self.on_wallet_refreshed,
+                               'EVT_WALLET_REFRESHED')
 
     def update(self):
         self.txt_wallet_network.Value = Wallet.display_nettype()
@@ -40,7 +44,7 @@ class Properties(PanelProperties):
                                                      ver >> 16 & ver)
 
     def on_wallet_new_block(self, height):
-        print('*** Properties.on_wallet_new_block ***')
+        logging.debug('Properties.on_wallet_new_block')
         self.txt_wallet_height.Value = str(Wallet.blockchain_height())
         self.txt_wallet_txs_count.Value = str(Wallet.history(False).count())
 
@@ -52,7 +56,7 @@ class Properties(PanelProperties):
             str(Wallet.daemon_blockchain_target_height())
 
     def on_wallet_refreshed(self):
-        print('*** Properties.on_wallet_refreshed ***')
+        logging.debug('Properties.on_wallet_refreshed')
         self.txt_wallet_sync.Value = str(Wallet.synchronized())
 
         ver = Wallet.daemon_connected()[1]

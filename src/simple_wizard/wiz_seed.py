@@ -1,4 +1,5 @@
 import os
+import logging
 import wx
 from .page_seed import PageSeed
 from lib.wallet import Wallet
@@ -39,17 +40,19 @@ class WizSeed(PageSeed):
         self.btn_next.Disable()
         self.txt_wallet_seed.SetValue(_('Generating seed... Please wait.'))
         Wallet.filename = filename
-        print(Wallet.filename)
+        # print(Wallet.filename)
         password = self.parent.options['password']
         Wallet.create(password)
 
-    def on_wallet_create(self, evt):
-        print('WizSeed.on_wallet_create')
-        if evt.status is True:
+    def on_wallet_create(self, status, reason):
+        logging.debug('WizSeed.on_wallet_create')
+        if status is True:
             self.Enable()
             self.btn_next.Enable()
+            self.btn_cancel.Disable()
             self.txt_wallet_seed.SetValue(Wallet.seed())
         else:
-            wx.MessageBox(evt.reason, _("Error"),
+            self.btn_cancel.Enable()
+            wx.MessageBox(reason, _("Error"),
                           parent=self, style=wx.ICON_ERROR)
             raise SystemExit

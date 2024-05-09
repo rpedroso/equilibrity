@@ -34,9 +34,14 @@ class Listener:
                         amount=amount)
 
     def new_block(self, height):
-        if not Wallet.check_connection():
+        # if not Wallet.check_connection():
+        #     return
+        if height % 9 == 0:
+            pub_sendMessage("EVT_WALLET_NEW_BLOCK", height=height)
             return
-        pub_sendMessage("EVT_WALLET_NEW_BLOCK", height=height)
+
+        if Wallet.synchronized():
+            pub_sendMessage("EVT_WALLET_NEW_BLOCK", height=height)
 
     def updated(self):
         print('updated')

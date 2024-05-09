@@ -7,7 +7,7 @@ from wx.adv import SplashScreen as SplashScreen
 # from settings import APPNAME
 from lib import config
 
-logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 opj = os.path.join
 
 APPNAME = 'Equilibrity'

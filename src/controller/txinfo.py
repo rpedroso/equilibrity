@@ -1,3 +1,4 @@
+import logging
 import wx
 from lib.wallet import Wallet
 from ui.panel_txinfo import TxInfoPanel
@@ -18,10 +19,10 @@ class TxInfo:
         self.ui.Bind(wx.EVT_WINDOW_MODAL_DIALOG_CLOSED, self.on_close)
 
     def on_close(self, evt):
-        print('**** TxInfo.on_close ***')
+        logging.debug('TxInfo.on_close')
         evt.Skip()
 
     def on_wallet_history(self, h):
-        print('**** TxInfo.on_wallet_history ***')
+        logging.debug('TxInfo.on_wallet_history')
         item = h.transaction_from_str(self.hash)
         self.ui.set_data(item)

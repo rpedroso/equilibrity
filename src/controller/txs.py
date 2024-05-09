@@ -1,3 +1,4 @@
+import logging
 import wx
 from lib.wallet import Wallet
 from controller.txinfo import TxInfo
@@ -47,7 +48,7 @@ class Txs:
             evt.Skip()
 
     def on_wallet_open(self, status, reason):
-        print('**** Txs.on_wallet_open ***')
+        logging.debug('Txs.on_wallet_open')
         if status is True:
             Wallet.history(refresh=True)
 
@@ -55,7 +56,7 @@ class Txs:
         Wallet.history(refresh=True)
 
     def on_wallet_history(self, h):
-        print('**** Txs.on_wallet_history ***')
+        logging.debug('Txs.on_wallet_history')
         hlist = sorted(h.get_all(), key=lambda x: x.timestamp(), reverse=True)
         data = []
         for item in hlist:
