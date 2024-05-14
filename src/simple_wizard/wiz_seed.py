@@ -51,6 +51,7 @@ class WizSeed(PageSeed):
             self.btn_next.Enable()
             self.btn_cancel.Disable()
             self.txt_wallet_seed.SetValue(Wallet.seed())
+            Wallet.close()
         else:
             self.btn_cancel.Enable()
             wx.MessageBox(reason, _("Error"),

@@ -6,6 +6,7 @@ from .wiz_wallet import WizWallet
 from .wiz_seed import WizSeed
 from .wiz_seed_restore import WizSeedRestore
 from lib.wallet import Wallet
+from lib.utils import resource_path
 
 _ = wx.GetTranslation
 
@@ -20,7 +21,7 @@ class Wizard(wiz):
             'wallet_name': f'{name}-{nettype}.wallet',
         }
 
-        bitmaps = [wx.Bitmap('images/wiz.jpg')]
+        bitmaps = [wx.Bitmap(resource_path('images/wiz.jpg'))]
         bb = wx.BitmapBundle.FromBitmaps(bitmaps)
 
         super().__init__(parent, title=_("Equilibrity Wizard"), bitmap=bb)

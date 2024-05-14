@@ -37,7 +37,7 @@ class PageSeed(wx.adv.WizardPage):
 
         self.SetSizer(sizer_1)
 
-        self.txt_wallet_seed.Disable()
+        # self.txt_wallet_seed.Disable()
 
         self.btn_next = self.FindWindowById(wx.ID_FORWARD)
         self.btn_prev = self.FindWindowById(wx.ID_BACKWARD)

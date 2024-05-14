@@ -33,8 +33,8 @@ class Controller:
                         id=Frame.ID_MENU_WALLET_SEED)
         self.frame.Bind(wx.EVT_MENU, self.on_menu_wallet_properties,
                         id=Frame.ID_MENU_WALLET_PROPERTIES)
-        self.frame.Bind(wx.EVT_MENU, self.on_menu_wallet_preferences,
-                        id=Frame.ID_MENU_WALLET_PREFERENCES)
+        # self.frame.Bind(wx.EVT_MENU, self.on_menu_wallet_preferences,
+        #                 id=Frame.ID_MENU_WALLET_PREFERENCES)
         self.frame.Bind(wx.EVT_MENU, self.on_menu_wallet_exit,
                         id=Frame.ID_MENU_WALLET_EXIT)
         self.frame.Bind(wx.EVT_MENU, self.on_menu_help_about,
@@ -111,7 +111,6 @@ class Controller:
         evt.Skip()
 
     def on_menu_wallet_exit(self, evt):
-        Wallet.close()
         self.frame.Close()
         evt.Skip()
 

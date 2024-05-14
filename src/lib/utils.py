@@ -1,3 +1,5 @@
+import sys
+import os
 import io
 import qrcode
 from qrcode.image.styledpil import StyledPilImage
@@ -18,13 +20,19 @@ def make_qrcode(text_data):
     qr.add_data(text_data)
 
     img = qr.make_image(image_factory=StyledPilImage,
-                        embeded_image_path="images/equilibria.png")
+                        embeded_image_path=resource_path("images/equilibria.png"))
     data = io.BytesIO()
     img.save(data, ext='png')
     data.seek(0)
     im = wx.Bitmap(wx.Image(data))
 
     return im
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', '')  # os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 
 if __name__ == '__main__':

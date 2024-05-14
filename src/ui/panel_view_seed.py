@@ -71,7 +71,7 @@ class PanelViewSeed(wx.Dialog):
         sizer_1.Add(btnsizer, 0, wx.EXPAND | wx.ALL, 8)
 
         self.SetSizer(sizer_1)
-        sizer_1.Fit(self)
+        # sizer_1.Fit(self)
 
         self.Layout()
 

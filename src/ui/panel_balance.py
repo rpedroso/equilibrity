@@ -1,4 +1,5 @@
 import wx
+from lib.utils import resource_path
 
 _ = wx.GetTranslation
 
@@ -9,7 +10,7 @@ class BalancePanel(wx.Panel):
 
         sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        bmp = wx.Bitmap("images/equilibria.png", wx.BITMAP_TYPE_ANY)
+        bmp = wx.Bitmap(resource_path("images/equilibria.png"), wx.BITMAP_TYPE_ANY)
         bmp_logo = wx.GenericStaticBitmap(self, wx.ID_ANY)
         bmp_logo.SetMinSize((100, 100))
         bmp_logo.SetScaleMode(bmp_logo.Scale_AspectFit)

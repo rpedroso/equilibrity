@@ -1,5 +1,6 @@
 import wx
 from wx.adv import TaskBarIcon as TaskBarIcon
+from lib.utils import resource_path
 
 _ = wx.GetTranslation
 
@@ -64,11 +65,11 @@ class Frame(wx.Frame):
         self.SetMinSize((640, 480))
         ico_bundle = wx.IconBundle()
         self.ico_bundle = ico_bundle
-        ico_bundle.AddIcon('images/equilibrity256x256.ico')
-        ico_bundle.AddIcon('images/equilibrity128x128.ico')
-        ico_bundle.AddIcon('images/equilibrity64x64.ico')
-        ico_bundle.AddIcon('images/equilibrity32x32.ico')
-        ico_bundle.AddIcon('images/equilibrity16x16.ico')
+        ico_bundle.AddIcon(resource_path('images/equilibrity256x256.ico'))
+        ico_bundle.AddIcon(resource_path('images/equilibrity128x128.ico'))
+        ico_bundle.AddIcon(resource_path('images/equilibrity64x64.ico'))
+        ico_bundle.AddIcon(resource_path('images/equilibrity32x32.ico'))
+        ico_bundle.AddIcon(resource_path('images/equilibrity16x16.ico'))
         self.SetIcons(ico_bundle)
 
         self.mnu = menuBar = wx.MenuBar()
@@ -80,10 +81,10 @@ class Frame(wx.Frame):
         self.mni_wallet_properties = menu1.Append(
             Frame.ID_MENU_WALLET_PROPERTIES, _("View P&roperties")
         )
-        menu1.AppendSeparator()
-        self.mni_wallet_preferences = menu1.Append(
-            Frame.ID_MENU_WALLET_PREFERENCES, _("&Preferences")
-        )
+        # menu1.AppendSeparator()
+        # self.mni_wallet_preferences = menu1.Append(
+        #     Frame.ID_MENU_WALLET_PREFERENCES, _("&Preferences")
+        # )
         menu1.AppendSeparator()
         menu1.Append(self.ID_MENU_WALLET_EXIT, _("E&xit"), _("Exit"))
         menuBar.Append(menu1, "&Wallet")
@@ -96,18 +97,19 @@ class Frame(wx.Frame):
         self.SetMenuBar(menuBar)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
-        self.pan_balance = pan_balance = BalancePanel(self)
-        self.pan_action = pan_action = ActionPanel(self)
-        self.pan_info = pan_info = InfoPanel(self)
-        self.pan_txs = pan_txs = TxsPanel(self)
+        panel = wx.Panel(self)
+        self.pan_balance = pan_balance = BalancePanel(panel)
+        self.pan_action = pan_action = ActionPanel(panel)
+        self.pan_info = pan_info = InfoPanel(panel)
+        self.pan_txs = pan_txs = TxsPanel(panel)
 
         sizer.Add(pan_balance, 0, wx.ALL | wx.EXPAND, 4)
         sizer.Add(pan_action, 0, wx.ALL | wx.EXPAND, 4)
         sizer.Add(pan_txs, 1, wx.ALL | wx.EXPAND, 4)
         sizer.Add(pan_info, 0, wx.ALL | wx.EXPAND, 4)
 
-        self.SetSizer(sizer)
-        sizer.Fit(self)
+        panel.SetSizer(sizer)
+        # sizer.Fit(panel)
         self.Layout()
 
         self.Bind(wx.EVT_ICONIZE, self.on_minimize)

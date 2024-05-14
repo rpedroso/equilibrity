@@ -6,6 +6,7 @@ import wx
 from wx.adv import SplashScreen as SplashScreen
 # from settings import APPNAME
 from lib import config
+from lib.utils import resource_path
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 opj = os.path.join
@@ -17,7 +18,7 @@ PREFS_FILENAME = 'prefs-%d.ini'
 def show_splash():
     # create, show and return the splash screen
     style = wx.adv.SPLASH_CENTRE_ON_SCREEN | wx.adv.SPLASH_NO_TIMEOUT
-    bitmap = wx.Bitmap('images/splash.png')
+    bitmap = wx.Bitmap(resource_path('images/splash.png'))
     wx.Bitmap.Rescale(bitmap, (300, 300))
     splash = SplashScreen(bitmap,
                           splashStyle=style,
