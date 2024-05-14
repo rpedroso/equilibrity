@@ -49,6 +49,8 @@ class Info:
 
     def on_wallet_refreshed(self):
         self.ui.status.wallet_connected(Wallet.synchronized())
+        height = Wallet.blockchain_height()
+        self.ui.height.SetLabel(_(f'Block: {height}'))
         self.__bytes_count()
         self.ui.Layout()
 

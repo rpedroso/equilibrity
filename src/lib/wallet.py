@@ -133,24 +133,17 @@ class _Wallet:
     def recover(self, password, mnemonic, restore_height):
         threaded(self.__recover, password, mnemonic, restore_height)
 
-    def __create_from_keys(self, wallet_file, password, height, address,
+    def __create_from_keys(self, password, restore_height, address,
                            view_key, spend_key):
-        language = settings.WALLET_LANG
-        nettype = settings.WALLET_NETTYPE
-        kdf_rounds = settings.WALLET_KDF_ROUNDS
-
         self.__wallet = self.__wm.create_wallet_from_keys(
-            wallet_file, password, language, nettype,
-            height, address, view_key, spend_key, kdf_rounds)
-        self.filename = wallet_file
+            self.filename, password, self.language, self.nettype,
+            restore_height, address, view_key, spend_key, self.kdf_rounds
+        )
 
-    def create_from_keys(self, wallet_file, password, height, address,
+    def create_from_keys(self, password, restore_height, address,
                          view_key, spend_key=""):
-        threaded(self.__create_from_keys, wallet_file, password, height,
+        threaded(self.__create_from_keys, password, restore_height,
                  address, view_key, spend_key)
-
-    def recover_wallet(self, password, mnemonic):
-        threaded(self.__recover_wallet, password, mnemonic)
 
     def verify_password(self, password):
         no_spend_key = False
@@ -350,7 +343,6 @@ class _Wallet:
 
     def hard_fork_info(self):
         return self.__wallet.hard_fork_info(0)
-        return f"Version: {version}, Earliest height: {earliest_height}"
 
     def display_mining_hash_rate(self):
         return str(self.__wm.mining_hash_rate())
