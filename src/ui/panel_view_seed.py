@@ -5,7 +5,8 @@ _ = wx.GetTranslation
 
 class PanelViewSeed(wx.Dialog):
     def __init__(self, parent):
-        super().__init__(parent, title=_('Seed & Keys'))
+        style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
+        super().__init__(parent, title=_('Seed & Keys'), style=style)
         self.SetMinSize((450, 500))
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)

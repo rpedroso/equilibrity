@@ -22,6 +22,8 @@ class RecvPanel(wx.Dialog):
     def __init__(self, *args, **kwds):
         address = kwds.pop('address')
         kwds['title'] = _('Receive')
+        style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
+        kwds['style'] = style
         super().__init__(*args, **kwds)
 
         bmp_qrcode = QRCode(self, address=address, size=(300, 300))

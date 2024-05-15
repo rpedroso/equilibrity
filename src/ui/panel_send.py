@@ -6,6 +6,9 @@ _ = wx.GetTranslation
 
 class SendPanel(wx.Dialog):
     def __init__(self, *args, **kwds):
+        kwds['style'] = (wx.DEFAULT_DIALOG_STYLE
+                         | wx.RESIZE_BORDER
+                         | wx.MAXIMIZE_BOX)
         super().__init__(*args, **kwds)
         self.SetTitle(_("Send"))
 

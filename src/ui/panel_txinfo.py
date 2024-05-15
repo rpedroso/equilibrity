@@ -11,6 +11,8 @@ class ListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
 
 class TxInfoPanel(wx.Dialog):
     def __init__(self, *args, **kwds):
+        style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
+        kwds['style'] = style
         super().__init__(*args, **kwds)
         self.SetTitle(_("Tx Info"))
 
