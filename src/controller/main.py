@@ -48,7 +48,7 @@ class Controller:
         dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
         dispatcher.connect(self.on_wallet_refreshed, 'EVT_WALLET_REFRESHED')
         dispatcher.connect(self.on_wallet_init, 'EVT_WALLET_INIT')
-        wx.CallAfter(self.open_wallet)
+        wx.CallLater(200, self.open_wallet)
 
     def ask_password(self):
         dlg = wx.PasswordEntryDialog(self.frame,
