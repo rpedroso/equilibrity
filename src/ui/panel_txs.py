@@ -25,7 +25,8 @@ class TxsPanel(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        self.search = wx.SearchCtrl(self, size=(-1, 28))
+        self.search = wx.SearchCtrl(self, size=(-1, 28),
+                                    style=wx.TE_PROCESS_ENTER)
         self.search.ShowCancelButton(True)
         sizer.Add(self.search, 0, wx.EXPAND, 0)
 
