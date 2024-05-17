@@ -1,13 +1,21 @@
 import wx
 from .page_node import PageNode
-from lib import config
+# from lib import config
+from lib.wallet import Wallet
 
 
 class WizNode(PageNode):
     def __init__(self, *args, **kw):
         super().__init__(*args, *kw)
         # self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGED, self.on_page_changed)
-        # self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.on_page_leave)
+        self.set_nettype(Wallet.nettype)
+
+        self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGING, self.on_page_leave)
+
+    def on_page_leave(self, evt):
+        Wallet.nettype = self.get_nettype()
+        Wallet.daemon = self.get_daemon_addr()
+        evt.Skip()
 
     # def on_page_enter(self, evt):
     #     print('Wiz3.on_page_changed')

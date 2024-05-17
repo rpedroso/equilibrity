@@ -1,6 +1,7 @@
 import wx
 import wx.adv
 from wx.adv import Wizard as wiz
+from .wiz_node import WizNode
 from .wiz_password import WizPassword
 from .wiz_wallet import WizWallet
 from .wiz_seed import WizSeed
@@ -26,12 +27,16 @@ class Wizard(wiz):
 
         super().__init__(parent, title=_("Equilibrity Wizard"), bitmap=bb)
 
+        self.page_node = WizNode(self)
         self.page_password = WizPassword(self)
         self.page_wallet = WizWallet(self)
         self.page_seed = WizSeed(self)
         self.page_seed_restore = WizSeedRestore(self)
 
         # Set the initial order of the pages
+        self.page_node.SetNext(self.page_password)
+
+        self.page_password.SetPrev(self.page_node)
         self.page_password.SetNext(self.page_wallet)
 
         self.page_wallet.SetPrev(self.page_password)
@@ -43,10 +48,10 @@ class Wizard(wiz):
         self.page_seed_restore.SetPrev(self.page_wallet)
         self.page_seed_restore.SetNext(None)
 
-        self.GetPageAreaSizer().Add(self.page_password)
+        self.GetPageAreaSizer().Add(self.page_node)
 
     def run(self):
-        ret = self.RunWizard(self.page_password)
+        ret = self.RunWizard(self.page_node)
         if not ret:
             self.options = {}
 

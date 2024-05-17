@@ -1,5 +1,6 @@
 import wx
 import wx.adv
+from lib.wallet import Wallet
 
 _ = wx.GetTranslation
 
@@ -49,15 +50,15 @@ class PageNode(wx.adv.WizardPageSimple):
 
         sizer_1.Add((1, 1), 0, wx.TOP | wx.BOTTOM, 5)
 
-        label_0 = wx.StaticText(self, wx.ID_ANY, _("Network type"))
-        label_0.SetFont(bold)
-        self.ch_nettype = wx.Choice(self, wx.ID_ANY, choices=['Mainnet',
-                                                              'Testnet',
-                                                              'Stagenet'])
-        self.ch_nettype.Select(0)
-        sizer_1.Add(label_0, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
-        sizer_1.Add(self.ch_nettype, 0,
-                    wx.BOTTOM | wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
+        # label_0 = wx.StaticText(self, wx.ID_ANY, _("Network type"))
+        # label_0.SetFont(bold)
+        # self.ch_nettype = wx.Choice(self, wx.ID_ANY, choices=['Mainnet',
+        #                                                       'Testnet',
+        #                                                       'Stagenet'])
+        # self.ch_nettype.Select(0)
+        # sizer_1.Add(label_0, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
+        # sizer_1.Add(self.ch_nettype, 0,
+        #             wx.BOTTOM | wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
 
         label_2 = wx.StaticText(self, wx.ID_ANY, _("Node type:"))
         label_2.SetFont(bold)
@@ -80,11 +81,11 @@ class PageNode(wx.adv.WizardPageSimple):
         self.btn_next = self.FindWindowById(wx.ID_FORWARD)
         self.btn_cancel = self.FindWindowById(wx.ID_CANCEL)
 
-        self.Bind(wx.EVT_CLOSE, self.on_wizard_close)
+        # self.Bind(wx.EVT_CLOSE, self.on_wizard_close)
         self.Bind(wx.adv.EVT_WIZARD_PAGE_CHANGED, self.on_page_enter)
-        self.Bind(wx.adv.EVT_WIZARD_CANCEL, self.on_wizard_cancel)
+        # self.Bind(wx.adv.EVT_WIZARD_CANCEL, self.on_wizard_cancel)
         self.Bind(wx.EVT_RADIOBUTTON, self.on_rd_nodetype)
-        self.ch_nettype.Bind(wx.EVT_CHOICE, self.on_choice_nettype)
+        # self.ch_nettype.Bind(wx.EVT_CHOICE, self.on_choice_nettype)
         self.lst_node.Bind(wx.EVT_LISTBOX, self.on_listbox_node)
 
         self._display_remotes(0)
@@ -106,14 +107,18 @@ class PageNode(wx.adv.WizardPageSimple):
         if self.rd_node_remote.Value:
             self.lst_node.Enable()
 
-    def on_wizard_close(self, evt):
-        wx.MessageBox(_("Cannot cancel at this stage."), _("Sorry"))
-        evt.Veto()
+    def set_nettype(self, n):
+        self._display_remotes(n)
+        self.update_ui()
 
-    def on_wizard_cancel(self, evt):
-        page = evt.GetPage()
-        if page is self:
-            self.on_wizard_close(evt)
+    # def on_wizard_close(self, evt):
+    #     wx.MessageBox(_("Cannot cancel at this stage."), _("Sorry"))
+    #     evt.Veto()
+
+    # def on_wizard_cancel(self, evt):
+    #     page = evt.GetPage()
+    #     if page is self:
+    #         self.on_wizard_close(evt)
 
     def on_rd_nodetype(self, evt):
         self.lst_node.Enable(evt.EventObject is self.rd_node_remote)
@@ -133,18 +138,20 @@ class PageNode(wx.adv.WizardPageSimple):
         self.lst_node.Set(PageNode.REMOTES.get(nettype))
 
     def get_nettype(self):
-        return self.ch_nettype.Selection
+        #return self.ch_nettype.Selection
+        return Wallet.nettype
 
     def get_daemon_addr(self):
         if self.rd_node_local.Value:
-            return WizNodePanel.LOCALS.get(self.get_nettype())
+            return PageNode.LOCALS.get(self.get_nettype())
         return self.lst_node.StringSelection
+
 
 if __name__ == "__main__":
     from wx.adv import Wizard
     app = wx.App()
 
     w = Wizard(None)
-    p = WizNodePanel(w)
+    p = PageNode(w)
     w.GetPageAreaSizer().Add(p)
     w.RunWizard(p)
