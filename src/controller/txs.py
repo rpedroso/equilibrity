@@ -30,6 +30,7 @@ class Txs:
         self.currentItem = idx = evt.Index
         item = self.data[idx][1]
         txinfo = TxInfo(self.controller, item)
+        txinfo.ui.CenterOnParent()
         txinfo.ui.ShowModal()
         txinfo.ui.Destroy()
 
