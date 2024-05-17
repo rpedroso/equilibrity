@@ -7,15 +7,15 @@ class PanelViewSeed(wx.Dialog):
     def __init__(self, parent):
         style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
         super().__init__(parent, title=_('Seed & Keys'), style=style)
-        self.SetMinSize((450, 500))
-        self.SetSize((450, 500))
+        # self.SetMinSize((450, 500))
+        # self.SetSize((450, 500))
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
 
-        static_line_1 = wx.StaticLine(self, wx.ID_ANY)
-        sizer_1.Add(static_line_1, 0, wx.BOTTOM | wx.EXPAND, 10)
+        # static_line_1 = wx.StaticLine(self, wx.ID_ANY)
+        # sizer_1.Add(static_line_1, 0, wx.BOTTOM | wx.EXPAND, 10)
 
-        label_2 = wx.StaticText(self, wx.ID_ANY, _("Seed:"))
+        label_2 = wx.StaticText(self, wx.ID_ANY, _("Seed:"), size=(550, -1))
         sizer_1.Add(label_2, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 20)
 
         self.txt_wallet_seed = wx.TextCtrl(
@@ -72,7 +72,7 @@ class PanelViewSeed(wx.Dialog):
 
         sizer_1.Add(btnsizer, 0, wx.EXPAND | wx.ALL, 8)
 
-        self.SetSizer(sizer_1)
+        self.SetSizerAndFit(sizer_1)
         # sizer_1.Fit(self)
 
         self.Layout()

@@ -26,10 +26,11 @@ class RecvPanel(wx.Dialog):
         kwds['style'] = style
         super().__init__(*args, **kwds)
 
-        bmp_qrcode = QRCode(self, address=address, size=(250, 250))
+        bmp_qrcode = QRCode(self, address=address, size=(200, 200))
 
         self.txt_addr = wx.TextCtrl(self, value=address,
-                                    style=wx.TE_MULTILINE | wx.TE_READONLY)
+                                    style=wx.TE_MULTILINE | wx.TE_READONLY,
+                                    size=(400, -1))
 
         copy_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_COPY,
                                                   wx.ART_TOOLBAR, (24, 24))
@@ -60,7 +61,7 @@ class RecvPanel(wx.Dialog):
         sizer_1.Add(sizer_2, 1,
                     wx.EXPAND | wx.RIGHT | wx.BOTTOM, 12)
         sizer_1.Add(sizer_3, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 12)
-        self.SetSizer(sizer_1)
+        self.SetSizerAndFit(sizer_1)
 
         self.SetEscapeId(self.btn_close.GetId())
 

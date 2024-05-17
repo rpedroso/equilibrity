@@ -109,9 +109,9 @@ class Frame(wx.Frame):
         sizer.Add(pan_txs, 1, wx.ALL | wx.EXPAND, 4)
         sizer.Add(pan_info, 0, wx.ALL | wx.EXPAND, 4)
 
-        panel.SetSizer(sizer)
+        panel.SetSizerAndFit(sizer)
         # sizer.Fit(panel)
-        self.Layout()
+        # self.Layout()
 
         self.Bind(wx.EVT_ICONIZE, self.on_minimize)
 

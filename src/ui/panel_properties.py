@@ -7,8 +7,8 @@ class PanelProperties(wx.Dialog):
     def __init__(self, parent):
         style = wx.DEFAULT_DIALOG_STYLE | wx.RESIZE_BORDER | wx.MAXIMIZE_BOX
         super().__init__(parent, style=style)
-        self.SetMinSize((450, 550))
-        self.SetSize((450, 550))
+        # self.SetMinSize((450, 550))
+        # self.SetSize((450, 550))
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
 
@@ -25,7 +25,8 @@ class PanelProperties(wx.Dialog):
                          wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT, 0)
 
         self.txt_wallet_network = wx.TextCtrl(
-            self, wx.ID_ANY, style=wx.BORDER_NONE | wx.TE_READONLY
+            self, wx.ID_ANY, style=wx.BORDER_NONE | wx.TE_READONLY,
+            size=(300, -1)  # This allow the panel to be sized correctly
         )
         grid_sizer_2.Add(self.txt_wallet_network, 0, wx.EXPAND, 0)
 
@@ -175,7 +176,7 @@ class PanelProperties(wx.Dialog):
 
         sizer_1.Add(btnsizer, 0, wx.EXPAND | wx.ALL, 8)
 
-        self.SetSizer(sizer_1)
+        self.SetSizerAndFit(sizer_1)
         # sizer_1.Fit(self)
 
         self.Layout()

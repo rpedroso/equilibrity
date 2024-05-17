@@ -9,6 +9,7 @@ class Send:
     def __init__(self, controller):
         self.controller = controller
         self.ui = SendPanel(controller.frame, size=(-1, 340))
+        self.ui.CenterOnParent()
 
         self.ui.btn_send.Bind(wx.EVT_BUTTON, self.on_btn_send)
         self.ui.btn_amount_max.Bind(wx.EVT_BUTTON, self.on_btn_amount_max)

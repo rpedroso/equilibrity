@@ -19,6 +19,7 @@ class Action:
 
     def on_button_recv(self, evt):
         p = RecvPanel(self.frame, address=Wallet.address(), size=(500, 500))
+        p.CenterOnParent()
         p.ShowModal()
         p.Destroy()
 
