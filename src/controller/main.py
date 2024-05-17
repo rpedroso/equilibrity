@@ -40,6 +40,8 @@ class Controller:
         self.frame.Bind(wx.EVT_MENU, self.on_menu_help_about,
                         id=Frame.ID_MENU_HELP_ABOUT)
         self.frame.Show()
+        if 'wxMSW' in wx.PlatformInfo:
+            self.frame.Raise()
 
         if app.splash:
             app.splash.Destroy()
@@ -56,6 +58,8 @@ class Controller:
         dlg.CentreOnParent()
         password = dlg.GetValue() if dlg.ShowModal() == wx.ID_OK else None
         dlg.Destroy()
+        if 'wxMSW' in wx.PlatformInfo:
+            self.frame.Raise()
         return password
 
     def on_wallet_open(self, status, reason):
