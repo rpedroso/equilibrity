@@ -63,6 +63,7 @@ class Frame(wx.Frame):
         self.controller = controller
         super().__init__(*args, **kwargs)
         self.SetMinSize((640, 480))
+        self.SetSize((640, 480))
         ico_bundle = wx.IconBundle()
         self.ico_bundle = ico_bundle
         ico_bundle.AddIcon(resource_path('images/equilibrity256x256.ico'))

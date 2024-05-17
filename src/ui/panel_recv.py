@@ -26,7 +26,7 @@ class RecvPanel(wx.Dialog):
         kwds['style'] = style
         super().__init__(*args, **kwds)
 
-        bmp_qrcode = QRCode(self, address=address, size=(300, 300))
+        bmp_qrcode = QRCode(self, address=address, size=(250, 250))
 
         self.txt_addr = wx.TextCtrl(self, value=address,
                                     style=wx.TE_MULTILINE | wx.TE_READONLY)
