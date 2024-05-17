@@ -118,4 +118,5 @@ class Frame(wx.Frame):
     def on_minimize(self, evt):
         print('on_minimize', self.IsIconized())
         if self.IsIconized() and TaskBarIcon.IsAvailable():
-            self.Hide()
+            if not 'wxMac' in wx.PlatformInfo:
+                self.Hide()
