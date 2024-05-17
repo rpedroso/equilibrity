@@ -58,7 +58,7 @@ class RecvPanel(wx.Dialog):
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_1.Add(bmp_qrcode, 0, wx.EXPAND | wx.TOP, 4)
         sizer_1.Add(self.txt_addr, 1, wx.EXPAND | wx.ALL, 8)
-        sizer_1.Add(sizer_2, 1,
+        sizer_1.Add(sizer_2, 0,
                     wx.EXPAND | wx.RIGHT | wx.BOTTOM, 12)
         sizer_1.Add(sizer_3, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 12)
         self.SetSizerAndFit(sizer_1)
