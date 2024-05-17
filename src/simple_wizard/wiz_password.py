@@ -17,7 +17,7 @@ class WizPassword(PagePassword):
 
     def on_leave(self, evt):
         self.parent.options['password'] = self.txt_password.Value
-        self.SetPrev(None)
+        # self.SetPrev(None)
 
     def on_enter(self, evt):
         if Wallet.exists():
