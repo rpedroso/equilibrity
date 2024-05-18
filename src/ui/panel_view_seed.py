@@ -15,14 +15,21 @@ class PanelViewSeed(wx.Dialog):
         # static_line_1 = wx.StaticLine(self, wx.ID_ANY)
         # sizer_1.Add(static_line_1, 0, wx.BOTTOM | wx.EXPAND, 10)
 
-        label_2 = wx.StaticText(self, wx.ID_ANY, _("Seed:"), size=(550, -1))
+        label_2 = wx.StaticText(self, wx.ID_ANY, _("Seed:"))
         sizer_1.Add(label_2, 0, wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 20)
 
         self.txt_wallet_seed = wx.TextCtrl(
-            self, wx.ID_ANY, style=wx.TE_MULTILINE | wx.TE_READONLY
+            self, wx.ID_ANY,
+            style=wx.TE_MULTILINE # | wx.TE_READONLY
         )
+        font = self.txt_wallet_seed.GetFont()
+        fsize = font.GetPointSize()
+        w, h = self.txt_wallet_seed.GetSizeFromTextSize(
+            self.txt_wallet_seed.GetTextExtent("W").y
+        )
+        self.txt_wallet_seed.SetInitialSize((550, h * 2))
         self.txt_wallet_seed.SetFont(
-            wx.Font(10, wx.FONTFAMILY_TELETYPE,
+            wx.Font(fsize, wx.FONTFAMILY_TELETYPE,
                     wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL, 0, "")
         )
         sizer_1.Add(self.txt_wallet_seed, 1,
