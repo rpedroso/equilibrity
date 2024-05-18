@@ -23,10 +23,11 @@ class TxInfoPanel(wx.Dialog):
         #     self, style=wx.LC_HRULES | wx.LC_REPORT | wx.LC_VRULES
         # )
         self.lst_txinfo = dv.DataViewListCtrl(self,
-                                              style=dv.DV_HORIZ_RULES
-                                              | dv.DV_VERT_RULES
+                                              style=dv.DV_ROW_LINES
+                                              # | dv.DV_HORIZ_RULES
+                                              # | dv.DV_VERT_RULES
                                               )
-        self.lst_txinfo.AppendTextColumn(_("Name"))  # , wx.LIST_FORMAT_LEFT)
+        self.lst_txinfo.AppendTextColumn(_("Name"), width=100)  # , wx.LIST_FORMAT_LEFT)
         self.lst_txinfo.AppendTextColumn(_("Value"))  # , wx.LIST_FORMAT_LEFT)
 
         sizer_1.Add(self.lst_txinfo, 1, wx.EXPAND, 0)

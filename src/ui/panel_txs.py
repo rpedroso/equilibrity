@@ -69,10 +69,10 @@ class TxsPanel(wx.Panel):
         #     style=wx.LC_HRULES | wx.LC_REPORT | wx.LC_VIRTUAL | wx.LC_VRULES
         # )
         self.txs = DataViewCtrl(self,
-                                style=wx.BORDER_THEME
+                                style=0  # wx.BORDER_THEME
                                 | dv.DV_ROW_LINES
                                 # | dv.DV_HORIZ_RULES
-                                | dv.DV_VERT_RULES
+                                # | dv.DV_VERT_RULES
                                 # | dv.DV_MULTIPLE
                                 )
 
