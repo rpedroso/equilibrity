@@ -1,5 +1,6 @@
 import logging
 import wx
+import wx.dataview as dv
 from lib.wallet import Wallet
 from controller.txinfo import TxInfo
 from datetime import datetime
@@ -13,8 +14,8 @@ class Txs:
         self.controller = controller
         self.data = []
         self.ui = controller.frame.pan_txs
-        self.ui.txs.Bind(wx.EVT_LIST_ITEM_ACTIVATED,
-                         self.on_lst_intem_activated)
+        self.ui.txs.Bind(dv.EVT_DATAVIEW_ITEM_ACTIVATED,
+                         self.on_lst_item_activated)
         dispatcher.connect(self.on_wallet_open, 'EVT_WALLET_OPEN')
         dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
         dispatcher.connect(self.on_wallet_history, 'EVT_WALLET_HISTORY')
@@ -26,8 +27,10 @@ class Txs:
         self.ui.search.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN,
                             lambda e: self.ui.search.SetValue(''))
 
-    def on_lst_intem_activated(self, evt):
-        self.currentItem = idx = evt.Index
+    def on_lst_item_activated(self, evt):
+        model = evt.GetModel()
+        idx = model.GetRow(evt.Item)
+        # self.currentItem = idx = evt.Index
         item = self.data[idx][1]
         txinfo = TxInfo(self.controller, item)
         txinfo.ui.CenterOnParent()
