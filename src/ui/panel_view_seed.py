@@ -20,7 +20,7 @@ class PanelViewSeed(wx.Dialog):
 
         self.txt_wallet_seed = wx.TextCtrl(
             self, wx.ID_ANY,
-            style=wx.TE_MULTILINE # | wx.TE_READONLY
+            style=wx.TE_MULTILINE | wx.TE_READONLY
         )
         font = self.txt_wallet_seed.GetFont()
         fsize = font.GetPointSize()
