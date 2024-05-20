@@ -56,6 +56,8 @@ class TxInfoPanel(wx.Dialog):
         self.lst_txinfo.AppendItem((_('Fee'), str(data.fee())))
         self.lst_txinfo.AppendItem((_('Amount'), str(data.amount())))
         self.lst_txinfo.AppendItem((_('Unlock Time'), str(data.unlock_time())))
+        self.lst_txinfo.AppendItem((_('Subaddress index'),
+                                    str(data.subaddr_index())))
         # self.lst_txinfo.DeleteAllItems()
         # idx = 0
         # self.lst_txinfo.InsertItem(idx, 'Block Height')
