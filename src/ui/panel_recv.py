@@ -1,6 +1,6 @@
 import wx
 from lib.utils import make_qrcode
-from .panel_address import AddressPanel
+from ui.panel_address import AddressPanel
 
 _ = wx.GetTranslation
 

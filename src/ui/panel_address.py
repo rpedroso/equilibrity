@@ -7,16 +7,17 @@ _ = wx.GetTranslation
 
 
 class AddressPanel(wx.Panel):
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, parent, size=(-1, -1)):
+        super().__init__(parent, size=size)
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
 
         self.lst_address = dv.DataViewListCtrl(self)
-        self.lst_address.AppendTextColumn(_('address'), width=140)
-        self.lst_address.AppendTextColumn(_('label'), width=140,
-                                          mode=dv.DATAVIEW_CELL_EDITABLE)
-        self.lst_address.AppendTextColumn(_('used?'), width=140)
+        self.col1 = self.lst_address.AppendTextColumn(_('address'), width=250)
+        self.col2 = self.lst_address.AppendTextColumn(
+            _('label'), width=150, mode=dv.DATAVIEW_CELL_EDITABLE
+        )
+        self.lst_address.AppendTextColumn(_('used?'))  # , width=100)
 
         self.btn_add = wx.Button(self, id=wx.ID_ADD)
         self.btn_add.Disable()
@@ -31,6 +32,7 @@ class AddressPanel(wx.Panel):
                               self.on_lst_edit_done)
 
         wx.CallAfter(self.init)
+        # self.init()
 
     def init(self):
         self._update()
@@ -38,6 +40,8 @@ class AddressPanel(wx.Panel):
         self.btn_add.Enable()
         # self.lst_address.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED,
         #                       self.on_lst_item_changed)
+        self.col1.Width = 300
+        self.col2.Width = 100
 
     def on_btn_add(self, evt):
         addr_count = Wallet.num_subaddresses(0)
@@ -96,9 +100,9 @@ if __name__ == "__main__":
     Wallet.kdf_rounds = 1
     Wallet.filename = '/home/rp/.Equilibrity/Equilibrity-1.wallet'
     Wallet.open('')
-    f = wx.Frame(None)
-    add_pan = AddressPanel(f)
-    f.Show()
+    f = wx.Dialog(None, size=(500, 500))
+    add_pan = AddressPanel(f)  # , size=(500, 500))
+    f.ShowModal()
     dispatcher.connect(on_wallet_open, 'EVT_WALLET_OPEN')
-    app.MainLoop()
+    # app.MainLoop()
     Wallet.close()
