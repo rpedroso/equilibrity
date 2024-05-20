@@ -73,6 +73,7 @@ class _Wallet:
         self.language = None
         self.nettype = None
         self.daemon = None
+        self.kdf_rounds = None
 
         self.__history_timer = None
 
@@ -163,6 +164,9 @@ class _Wallet:
 
     def balance(self):
         return self.__wallet.balance_all()
+
+    def account_balance(account_index):
+        return self.__wallet.balance(account_index)
 
     def unlocked_balance(self):
         return self.__wallet.unlocked_balance_all()
@@ -347,5 +351,19 @@ class _Wallet:
     def display_mining_hash_rate(self):
         return str(self.__wm.mining_hash_rate())
 
+    def num_subaddress_accounts(self):
+        return self.__wallet.num_subaddress_accounts()
+
+    def num_subaddresses(self, account_index):
+        return self.__wallet.num_subaddresses(account_index)
+
+    def add_subaddress(self, account_index, label):
+        self.__wallet.add_subaddress(account_index, label)
+
+    def get_subaddress_label(self, account_index, address_index):
+        return self.__wallet.get_subaddress_label(account_index, address_index)
+
+    def set_subaddress_label(self, account_index, address_index, label):
+        self.__wallet.set_subaddress_label(account_index, address_index, label)
 
 Wallet = _Wallet()

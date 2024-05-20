@@ -1,6 +1,7 @@
 import wx
 from lib.wallet import Wallet
-from ui.panel_recv import RecvPanel
+# from ui.panel_recv import RecvPanel
+from controller.recv import Recv
 from controller.send import Send
 from pydispatch import dispatcher
 
@@ -18,14 +19,16 @@ class Action:
         self.ui.btn_receive.Enable(status)
 
     def on_button_recv(self, evt):
-        p = RecvPanel(self.frame, address=Wallet.address(), size=(500, 500))
-        p.CenterOnParent()
-        p.ShowModal()
-        p.Destroy()
+        p = Recv(self) # , size=(500, 500))
+        p.ui.CenterOnParent()
+        p.ui.ShowModal()
+        p.ui.Destroy()
 
     def on_button_send(self, evt):
         p = Send(self)
+        p.ui.CenterOnParent()
         p.ui.ShowModal()
+        p.ui.Destroy()
 
     def on_wallet_connect(self, status, daemon_version):
         self.ui.btn_send.Enable(status)
