@@ -47,7 +47,9 @@ class AddressPanel(wx.Panel):
         self.lst_address.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE,
                               self.on_lst_edit_done)
 
-        self.lst_address.Bind(wx.EVT_MOUSE_EVENTS, self.on_lst_mouse_events)
+        # self.lst_address.Bind(wx.EVT_MOUSE_EVENTS, self.on_lst_mouse_events)
+        self.lst_address.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU,
+                              self.on_lst_item_context_menu)
 
         # wx.CallAfter(self.init)
         self.init()
@@ -77,11 +79,18 @@ class AddressPanel(wx.Panel):
             Wallet.set_subaddress_label(0, row, value)
         wx.CallAfter(__, evt.EventObject, row, col)
 
-    def on_lst_mouse_events(self, evt):
-        if not evt.RightUp():
-            evt.Skip()
-            return
+    # def on_lst_mouse_events(self, evt):
+    #     if not evt.RightUp():
+    #         evt.Skip()
+    #         return
 
+    #     menu = wx.Menu()
+    #     menu.Append(AddressPanel.AP_COPY_ADDR_ID, _("Copy address"))
+    #     menu.Append(AddressPanel.AP_COPY_LABEL_ID, _("Copy label"))
+    #     self.PopupMenu(menu)
+    #     menu.Destroy()
+
+    def on_lst_item_context_menu(self, evt):
         menu = wx.Menu()
         menu.Append(AddressPanel.AP_COPY_ADDR_ID, _("Copy address"))
         menu.Append(AddressPanel.AP_COPY_LABEL_ID, _("Copy label"))
