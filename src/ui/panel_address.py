@@ -14,8 +14,7 @@ class AddressPanel(wx.Panel):
 
         self.lst_address = dv.DataViewListCtrl(self)
         self.col1 = self.lst_address.AppendTextColumn(_('address'), width=300)
-        self.col2 = self.lst_address.AppendTextColumn(_('balance'), width=100)
-        self.col3 = self.lst_address.AppendTextColumn(
+        self.col2 = self.lst_address.AppendTextColumn(
             _('label'), width=100, mode=dv.DATAVIEW_CELL_EDITABLE
         )
         self.lst_address.AppendTextColumn(_('used?'))  # , width=100)
@@ -43,7 +42,6 @@ class AddressPanel(wx.Panel):
         #                       self.on_lst_item_changed)
         self.col1.Width = 300
         self.col2.Width = 100
-        self.col3.Width = 100
 
     def on_btn_add(self, evt):
         addr_count = Wallet.num_subaddresses(0)
@@ -90,41 +88,45 @@ class AddressPanel(wx.Panel):
         # print(Wallet.address(0, 0))
         # print(Wallet.address(0, 1))
 
-        # subaddress_set = set()
+        subaddress_set = set()
         h = Wallet.history(refresh=False)
         # for n in range(h.count()):
         #     subaddress_set.add(h.transaction(n).subaddr_index().pop())
 
-        # for n in range(addr_count):
-        #     addr = Wallet.address(0, n)
-        #     label = Wallet.get_subaddress_label(0, n)
-        #     self.lst_address.AppendItem(
-        #         (addr, label, 'used' if n in subaddress_set else 'not used')
-        #     )
+        for tx in h.get_all():
+            idx = tx.subaddr_index()
+            subaddress_set.update(idx)
 
         for n in range(addr_count):
             addr = Wallet.address(0, n)
             label = Wallet.get_subaddress_label(0, n)
-            used = 'not used'
-            balance = 0
-
-            for tx in h.get_all():
-                # print(tx)
-                if n in tx.subaddr_index():
-                    used = 'used'
-                    if tx.is_failed():
-                        continue
-                    factor = -1 if tx.direction() else 1
-                    balance += (tx.amount() + tx.fee()) * factor
-
-            # balance = sum((-1 if tx.direction() else 1) * (tx.amount() + tx.fee())
-            #               for tx in txs if n in tx.subaddr_index() and not tx.is_failed())
-
-            balance_str = Wallet.display_amount(balance)
-            # print(f'{addr[:6]}  {label}  {balance_str} {used}')
             self.lst_address.AppendItem(
-                (addr, balance_str, label, used)
+                (addr, label, 'used' if n in subaddress_set else 'not used')
             )
+
+        # for n in range(addr_count):
+        #     addr = Wallet.address(0, n)
+        #     label = Wallet.get_subaddress_label(0, n)
+        #     used = 'not used'
+        #     balance = 0
+
+        #     for tx in h.get_all():
+        #         # print(tx)
+        #         if n in tx.subaddr_index():
+        #             used = 'used'
+        #             if tx.is_failed():
+        #                 continue
+        #             factor = -1 if tx.direction() else 1
+        #             balance += (tx.amount() + tx.fee()) * factor
+
+        #     # balance = sum((-1 if tx.direction() else 1) * (tx.amount() + tx.fee())
+        #     #               for tx in txs if n in tx.subaddr_index() and not tx.is_failed())
+
+        #     balance_str = Wallet.display_amount(balance)
+        #     # print(f'{addr[:6]}  {label}  {balance_str} {used}')
+        #     self.lst_address.AppendItem(
+        #         (addr, balance_str, label, used)
+        #     )
 
 
 if __name__ == "__main__":
