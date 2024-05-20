@@ -24,59 +24,63 @@ class RecvPanel(wx.Dialog):
         super().__init__(*args, **kwds)
 
         self.pan_address = AddressPanel(self)
+
         bmp_qrcode = QRCode(self, address=address, size=(200, 200))
         self.bmp_qrcode = bmp_qrcode
 
-        # self.txt_addr = wx.TextCtrl(self, value=address,
-        #                             style=wx.TE_MULTILINE | wx.TE_READONLY,
-        #                             size=(500, -1))
-
-        copy_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_COPY,
-                                                  wx.ART_TOOLBAR, (24, 24))
-        lbl_copied = wx.StaticText(self, label="", size=(20, -1),
-                                   style=wx.ALIGN_RIGHT)
-        self.lbl_copied = lbl_copied
-
-        self.btn_bitmap = wx.BitmapButton(
-            self, wx.ID_ANY,
-            copy_bmp)
-
-        self.btn_bitmap.SetSize(self.btn_bitmap.GetBestSize())
-
         self.btn_close = wx.Button(self, wx.ID_CLOSE)
 
-        sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
-        sizer_2.Add(self.btn_bitmap, 0, wx.LEFT, 8)
-        sizer_2.Add(lbl_copied, 1, wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 4)
-        self.sizer_2 = sizer_2
+        sizer_2 = wx.BoxSizer(wx.VERTICAL)
+        sizer_2.Add(bmp_qrcode, 0, wx.EXPAND | wx.LEFT | wx.ALIGN_TOP, 4)
+        sizer_2.Add((1, 1), 1, wx.EXPAND | wx.LEFT | wx.ALIGN_TOP, 4)
 
         sizer_3 = wx.StdDialogButtonSizer()
         sizer_3.AddButton(self.btn_close)
         sizer_3.Realize()
 
+        sizer_4 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer_4.Add(self.pan_address, 1, wx.EXPAND | wx.RIGHT, 4)
+        sizer_4.Add(sizer_2, 0, wx.EXPAND | wx.RIGHT, 4)
+
+
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
-        sizer_1.Add(bmp_qrcode, 0, wx.EXPAND | wx.TOP, 4)
-        # sizer_1.Add(self.txt_addr, 1, wx.EXPAND | wx.ALL, 8)
-        sizer_1.Add(sizer_2, 0,
-                    wx.EXPAND | wx.RIGHT | wx.BOTTOM, 12)
-        sizer_1.Add(self.pan_address, 1, wx.EXPAND | wx.TOP, 4)
+        sizer_1.Add(sizer_4, 1, wx.EXPAND | wx.TOP, 0)
         sizer_1.Add(sizer_3, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 12)
+
         self.SetSizer(sizer_1)
 
         self.SetEscapeId(self.btn_close.GetId())
 
-        self.btn_bitmap.Bind(wx.EVT_BUTTON, self.on_btn_copy)
+        self.pan_address.btn_copy.Bind(wx.EVT_BUTTON, self.on_btn_copy_addr)
+        self.pan_address.Bind(wx.EVT_MENU, self.on_btn_copy_addr,
+                              id=AddressPanel.AP_COPY_ADDR_ID)
+        self.pan_address.Bind(wx.EVT_MENU, self.on_btn_copy_label,
+                              id=AddressPanel.AP_COPY_LABEL_ID)
 
-    def on_btn_copy(self, evt):
+    def on_btn_copy_addr(self, evt):
         data = wx.TextDataObject()
         text = self.address
         data.SetText(text)
         if wx.TheClipboard.Open():
             wx.TheClipboard.SetData(data)
             wx.TheClipboard.Close()
-            self.btn_bitmap.Disable()
-            self.lbl_copied.SetLabel(_('Copied'))
-            wx.CallLater(500, self.btn_bitmap.Enable)
+            # self.btn_bitmap.Disable()
+            # self.lbl_copied.SetLabel(_('Copied'))
+            # wx.CallLater(500, self.btn_bitmap.Enable)
+        else:
+            wx.MessageBox(_("Unable to open the clipboard"), _("Error"))
+
+    def on_btn_copy_label(self, evt):
+        row = self.pan_address.lst_address.GetSelectedRow()
+        label = self.pan_address.lst_address.GetValue(row, 1)
+        data = wx.TextDataObject()
+        data.SetText(label)
+        if wx.TheClipboard.Open():
+            wx.TheClipboard.SetData(data)
+            wx.TheClipboard.Close()
+            # self.btn_bitmap.Disable()
+            # self.lbl_copied.SetLabel(_('Copied'))
+            # wx.CallLater(500, self.btn_bitmap.Enable)
         else:
             wx.MessageBox(_("Unable to open the clipboard"), _("Error"))
 

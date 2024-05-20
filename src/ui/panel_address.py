@@ -7,29 +7,47 @@ _ = wx.GetTranslation
 
 
 class AddressPanel(wx.Panel):
+    AP_COPY_ADDR_ID = wx.NewIdRef()
+    AP_COPY_LABEL_ID = wx.NewIdRef()
     def __init__(self, parent, size=(-1, -1)):
         super().__init__(parent, size=size)
 
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
+        sizer_2 = wx.BoxSizer(wx.HORIZONTAL)
 
         self.lst_address = dv.DataViewListCtrl(self)
-        self.col1 = self.lst_address.AppendTextColumn(_('address'), width=300)
+        self.col1 = self.lst_address.AppendTextColumn(_('address'), width=260)
         self.col2 = self.lst_address.AppendTextColumn(
             _('label'), width=100, mode=dv.DATAVIEW_CELL_EDITABLE
         )
         self.lst_address.AppendTextColumn(_('used?'))  # , width=100)
 
-        self.btn_add = wx.Button(self, id=wx.ID_ADD)
+        add_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_PLUS,
+                                                 wx.ART_TOOLBAR, (24, 24))
+        self.btn_add = wx.BitmapButton(self, wx.ID_ADD, add_bmp)
+        self.btn_add.ToolTip = _('Add subaddress (label can be edited in the '
+                                 'list)')
         self.btn_add.Disable()
 
+        copy_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_COPY,
+                                                  wx.ART_TOOLBAR, (24, 24))
+        self.btn_copy = wx.BitmapButton(self, wx.ID_ANY, copy_bmp)
+        self.btn_copy.ToolTip = _('Copy selected address')
+        self.btn_copy.SetSize(self.btn_copy.GetBestSize())
+
+        sizer_2.Add(self.btn_add, 0, 0, 0)
+        sizer_2.Add(self.btn_copy, 0, 0, 0)
+
         sizer_1.Add(self.lst_address, 1, wx.EXPAND, 0)
-        sizer_1.Add(self.btn_add, 0, 0, 0)
+        sizer_1.Add(sizer_2, 0, wx.EXPAND, 0)
 
         self.SetSizer(sizer_1)
 
         self.btn_add.Bind(wx.EVT_BUTTON, self.on_btn_add)
         self.lst_address.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE,
                               self.on_lst_edit_done)
+
+        self.lst_address.Bind(wx.EVT_MOUSE_EVENTS, self.on_lst_mouse_events)
 
         # wx.CallAfter(self.init)
         self.init()
@@ -38,9 +56,7 @@ class AddressPanel(wx.Panel):
         self._update()
         self.lst_address.SelectRow(0)
         self.btn_add.Enable()
-        # self.lst_address.Bind(dv.EVT_DATAVIEW_SELECTION_CHANGED,
-        #                       self.on_lst_item_changed)
-        self.col1.Width = 300
+        self.col1.Width = 260
         self.col2.Width = 100
 
     def on_btn_add(self, evt):
@@ -49,13 +65,6 @@ class AddressPanel(wx.Panel):
         self._update()
 
     def on_lst_edit_done(self, evt):
-        # print(dir(evt))
-        # print(evt.GetValue())
-        # print(evt.GetString())
-        # print(evt.GetDataBuffer())
-        # print(dir(evt.Model))
-        # print(evt.Model.GetValue(evt.Item, 1))
-
         if evt.Value is None and 'wxGTK' in wx.PlatformInfo:
             return
 
@@ -65,68 +74,37 @@ class AddressPanel(wx.Panel):
 
         def __(o, row, col):
             value = o.GetValue(row, col)
-            print(value)
             Wallet.set_subaddress_label(0, row, value)
         wx.CallAfter(__, evt.EventObject, row, col)
 
-        # store = lst.Store
-        # val = store.GetValueByRow(row, col)
-        # print('editing', row, val)
-        # Wallet.set_subaddress_label(0, row, evt.Value)
-        # evt.Skip()
+    def on_lst_mouse_events(self, evt):
+        if not evt.RightUp():
+            evt.Skip()
+            return
 
-    # def on_lst_item_changed(self, evt):
-    #     print('aqui')
+        menu = wx.Menu()
+        menu.Append(AddressPanel.AP_COPY_ADDR_ID, _("Copy address"))
+        menu.Append(AddressPanel.AP_COPY_LABEL_ID, _("Copy label"))
+        self.PopupMenu(menu)
+        menu.Destroy()
 
     def _update(self):
         self.lst_address.DeleteAllItems()
-        # Wallet.add_subaddress(0, 'sub address 1')
-        # acc_count = Wallet.num_subaddress_accounts()
-        # print(acc_count)
-        addr_count = Wallet.num_subaddresses(0)
-        # print(addr_count)
-        # print(Wallet.address(0, 0))
-        # print(Wallet.address(0, 1))
+
+        h = Wallet.history(refresh=False)
 
         subaddress_set = set()
-        h = Wallet.history(refresh=False)
-        # for n in range(h.count()):
-        #     subaddress_set.add(h.transaction(n).subaddr_index().pop())
-
         for tx in h.get_all():
             idx = tx.subaddr_index()
             subaddress_set.update(idx)
 
+        addr_count = Wallet.num_subaddresses(0)
         for n in range(addr_count):
             addr = Wallet.address(0, n)
             label = Wallet.get_subaddress_label(0, n)
             self.lst_address.AppendItem(
                 (addr, label, 'used' if n in subaddress_set else 'not used')
             )
-
-        # for n in range(addr_count):
-        #     addr = Wallet.address(0, n)
-        #     label = Wallet.get_subaddress_label(0, n)
-        #     used = 'not used'
-        #     balance = 0
-
-        #     for tx in h.get_all():
-        #         # print(tx)
-        #         if n in tx.subaddr_index():
-        #             used = 'used'
-        #             if tx.is_failed():
-        #                 continue
-        #             factor = -1 if tx.direction() else 1
-        #             balance += (tx.amount() + tx.fee()) * factor
-
-        #     # balance = sum((-1 if tx.direction() else 1) * (tx.amount() + tx.fee())
-        #     #               for tx in txs if n in tx.subaddr_index() and not tx.is_failed())
-
-        #     balance_str = Wallet.display_amount(balance)
-        #     # print(f'{addr[:6]}  {label}  {balance_str} {used}')
-        #     self.lst_address.AppendItem(
-        #         (addr, balance_str, label, used)
-        #     )
 
 
 if __name__ == "__main__":
