@@ -31,8 +31,8 @@ class AddressPanel(wx.Panel):
         self.lst_address.Bind(dv.EVT_DATAVIEW_ITEM_EDITING_DONE,
                               self.on_lst_edit_done)
 
-        wx.CallAfter(self.init)
-        # self.init()
+        # wx.CallAfter(self.init)
+        self.init()
 
     def init(self):
         self._update()
@@ -51,16 +51,28 @@ class AddressPanel(wx.Panel):
     def on_lst_edit_done(self, evt):
         # print(dir(evt))
         # print(evt.GetValue())
-        if evt.Value is None:
+        # print(evt.GetString())
+        # print(evt.GetDataBuffer())
+        # print(dir(evt.Model))
+        # print(evt.Model.GetValue(evt.Item, 1))
+
+        if evt.Value is None and 'wxGTK' in wx.PlatformInfo:
             return
 
         lst = evt.EventObject
+        col = 1
         row = lst.SelectedRow
-        # col = 0
+
+        def __(o, row, col):
+            value = o.GetValue(row, col)
+            print(value)
+            Wallet.set_subaddress_label(0, row, value)
+        wx.CallAfter(__, evt.EventObject, row, col)
+
         # store = lst.Store
         # val = store.GetValueByRow(row, col)
-        # print(val)
-        Wallet.set_subaddress_label(0, row, evt.Value)
+        # print('editing', row, val)
+        # Wallet.set_subaddress_label(0, row, evt.Value)
         # evt.Skip()
 
     # def on_lst_item_changed(self, evt):
@@ -92,7 +104,7 @@ class AddressPanel(wx.Panel):
 if __name__ == "__main__":
     def on_wallet_open():
         add_pan.btn_add.Enable()
-        add_pan._update()
+        add_pan.init()
 
     app = wx.App(False)
     # Wallet.daemon = 'localhost:9331'
@@ -102,7 +114,7 @@ if __name__ == "__main__":
     Wallet.open('')
     f = wx.Dialog(None, size=(500, 500))
     add_pan = AddressPanel(f)  # , size=(500, 500))
-    f.ShowModal()
     dispatcher.connect(on_wallet_open, 'EVT_WALLET_OPEN')
+    f.ShowModal()
     # app.MainLoop()
     Wallet.close()
