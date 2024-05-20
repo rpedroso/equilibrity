@@ -54,6 +54,9 @@ class DataViewCtrl(dv.DataViewCtrl):
 
 
 class TxsPanel(wx.Panel):
+    TP_OPEN_EXPLORER_ID = wx.NewIdRef()
+    TP_TX_INFO = wx.NewIdRef()
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -94,6 +97,28 @@ class TxsPanel(wx.Panel):
         sizer.Add(self.txs, 1, wx.EXPAND, 0)
 
         self.SetSizer(sizer)
+
+        self.txs.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU,
+                      self.on_lst_item_context_menu)
+
+        self.Bind(wx.EVT_MENU, self.on_open_explorer,
+                  id=self.TP_OPEN_EXPLORER_ID)
+
+    def on_lst_item_context_menu(self, evt):
+        menu = wx.Menu()
+        menu.Append(self.TP_OPEN_EXPLORER_ID, _("Open in explorer"))
+        menu.Append(self.TP_TX_INFO, _("Tx info"))
+        self.PopupMenu(menu)
+        menu.Destroy()
+
+    def on_open_explorer(self, evt):
+        import webbrowser
+        item = self.txs.GetSelection()
+        model = self.txs.Model
+        _hash = model.GetValue(item, 1)
+        # print(_hash)
+        url = f'https://explorer.equilibriacc.com/tx/{_hash}'
+        webbrowser.open(url)
 
 
 if __name__ == "__main__":
