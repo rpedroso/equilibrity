@@ -69,11 +69,21 @@ class RecvPanel(wx.Dialog):
 
         row = self.pan_address.lst_address.GetSelectedRow()
         label = self.pan_address.lst_address.GetValue(row, 1)
+        if not label:
+            label = 'Untitled'
+
+        if 'wxMac' in wx.PlatformInfo:
+        #     label = "%s.png" % label
+        # label = label.replace(' ', '-')
+            if not label.lower().endswith('.png'):
+                label = "%s.png" % label
+
         default_dir = wx.StandardPaths.Get().GetDocumentsDir()
         dlg = wx.FileDialog(self, message=_("Save qrcode image as..."),
                             defaultDir=default_dir, defaultFile=label,
                             wildcard=wildcard,
                             style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        dlg.SetFilterIndex(0)
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             bmp = self.bmp_qrcode.GetBitmap()
