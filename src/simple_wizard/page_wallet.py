@@ -20,6 +20,7 @@ class PageWallet(wx.adv.WizardPage):
 
         self.rd_wallet_new = wx.RadioButton(self, wx.ID_ANY,
                                             _(" Create a new wallet"))
+        self.rd_wallet_new.SetValue(True)
         sizer_1.Add(self.rd_wallet_new, 0,
                     wx.EXPAND | wx.LEFT | wx.RIGHT | wx.TOP, 20)
 
