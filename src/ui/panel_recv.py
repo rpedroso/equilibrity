@@ -28,10 +28,16 @@ class RecvPanel(wx.Dialog):
         bmp_qrcode = QRCode(self, address=address, size=(200, 200))
         self.bmp_qrcode = bmp_qrcode
 
+        save_bmp = wx.ArtProvider.GetBitmapBundle(wx.ART_FILE_SAVE,
+                                                  wx.ART_TOOLBAR, (24, 24))
+        self.btn_save = wx.BitmapButton(self, wx.ID_SAVE, save_bmp)
+        self.btn_save.ToolTip = _('Save qrcode image')
+
         self.btn_close = wx.Button(self, wx.ID_CLOSE)
 
         sizer_2 = wx.BoxSizer(wx.VERTICAL)
         sizer_2.Add(bmp_qrcode, 0, wx.EXPAND | wx.LEFT | wx.ALIGN_TOP, 4)
+        sizer_2.Add(self.btn_save, 0, wx.LEFT | wx.ALIGN_TOP, 4)
         sizer_2.Add((1, 1), 1, wx.EXPAND | wx.LEFT | wx.ALIGN_TOP, 4)
 
         sizer_3 = wx.StdDialogButtonSizer()
@@ -42,7 +48,6 @@ class RecvPanel(wx.Dialog):
         sizer_4.Add(self.pan_address, 1, wx.EXPAND | wx.RIGHT, 4)
         sizer_4.Add(sizer_2, 0, wx.EXPAND | wx.RIGHT, 4)
 
-
         sizer_1 = wx.BoxSizer(wx.VERTICAL)
         sizer_1.Add(sizer_4, 1, wx.EXPAND | wx.TOP, 0)
         sizer_1.Add(sizer_3, 0, wx.ALIGN_RIGHT | wx.BOTTOM, 12)
@@ -51,11 +56,28 @@ class RecvPanel(wx.Dialog):
 
         self.SetEscapeId(self.btn_close.GetId())
 
+        self.btn_save.Bind(wx.EVT_BUTTON, self.on_btn_save)
         self.pan_address.btn_copy.Bind(wx.EVT_BUTTON, self.on_btn_copy_addr)
         self.pan_address.Bind(wx.EVT_MENU, self.on_btn_copy_addr,
                               id=AddressPanel.AP_COPY_ADDR_ID)
         self.pan_address.Bind(wx.EVT_MENU, self.on_btn_copy_label,
                               id=AddressPanel.AP_COPY_LABEL_ID)
+
+    def on_btn_save(self, evt):
+        wildcard = "PNG files (*.png)|*.png|" \
+                   "All files (*.*)|*.*"
+
+        row = self.pan_address.lst_address.GetSelectedRow()
+        label = self.pan_address.lst_address.GetValue(row, 1)
+        default_dir = wx.StandardPaths.Get().GetDocumentsDir()
+        dlg = wx.FileDialog(self, message=_("Save qrcode image as..."),
+                            defaultDir=default_dir, defaultFile=label,
+                            wildcard=wildcard,
+                            style=wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            bmp = self.bmp_qrcode.GetBitmap()
+            bmp.SaveFile(path, wx.BITMAP_TYPE_PNG)
 
     def on_btn_copy_addr(self, evt):
         data = wx.TextDataObject()
