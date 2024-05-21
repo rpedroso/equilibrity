@@ -65,6 +65,7 @@ class PageNode(wx.adv.WizardPageSimple):
         sizer_1.Add(label_2, 0, wx.EXPAND | wx.LEFT | wx.RIGHT, 20)
 
         self.rd_node_local = wx.RadioButton(self, wx.ID_ANY, _("Local"))
+        self.rd_node_local.SetValue(True)
         sizer_1.Add(self.rd_node_local, 0, wx.ALL, 20)
 
         self.rd_node_remote = wx.RadioButton(self, wx.ID_ANY, _("Remote"))
