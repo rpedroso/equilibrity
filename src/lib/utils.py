@@ -19,8 +19,10 @@ def make_qrcode(text_data):
     qr = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
     qr.add_data(text_data)
 
-    img = qr.make_image(image_factory=StyledPilImage,
-                        embeded_image_path=resource_path("images/equilibria.png"))
+    img = qr.make_image(
+        image_factory=StyledPilImage,
+        embeded_image_path=resource_path("images/qrcode-equilibria.png")
+    )
     data = io.BytesIO()
     img.save(data, ext='png')
     data.seek(0)
