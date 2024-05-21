@@ -2,6 +2,7 @@ import wx
 # import wx.lib.mixins.listctrl as listmix
 import wx.dataview as dv
 from lib.wallet import Wallet
+from pydispatch import dispatcher
 
 _ = wx.GetTranslation
 
@@ -65,12 +66,22 @@ class TxsPanel(wx.Panel):
 
         self.SetSizer(sizer)
 
+        self.txs.Bind(dv.EVT_DATAVIEW_ITEM_ACTIVATED,
+                      self.on_lst_item_activated)
         self.txs.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU,
                       self.on_lst_item_context_menu)
 
         if Wallet.nettype == 0:
-            self.Bind(wx.EVT_MENU, self.on_open_explorer,
+            self.Bind(wx.EVT_MENU, self.on_menu_open_explorer,
                       id=self.TP_OPEN_EXPLORER_ID)
+
+        self.Bind(wx.EVT_MENU, self.on_menu_tx_info, id=self.TP_TX_INFO)
+
+    def on_lst_item_activated(self, evt):
+        item = self.txs.GetSelection()
+        model = self.txs.Model
+        _hash = model.GetValue(item, 1)
+        dispatcher.send('EVT_TXS_ITEM_ACTIVATED', self.txs, _hash)
 
     def on_lst_item_context_menu(self, evt):
         item = self.txs.GetSelection()
@@ -82,7 +93,7 @@ class TxsPanel(wx.Panel):
         self.PopupMenu(menu)
         menu.Destroy()
 
-    def on_open_explorer(self, evt):
+    def on_menu_open_explorer(self, evt):
         import webbrowser
         item = self.txs.GetSelection()
         if item.ID is None:
@@ -98,6 +109,9 @@ class TxsPanel(wx.Panel):
         # print(_hash)
         url = f'https://explorer.equilibriacc.com/tx/{_hash}'
         webbrowser.open(url)
+
+    def on_menu_tx_info(self, evt):
+        self.on_lst_item_activated(evt)
 
 
 if __name__ == "__main__":

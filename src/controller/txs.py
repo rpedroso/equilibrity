@@ -14,25 +14,33 @@ class Txs:
         self.controller = controller
         self.data = []
         self.ui = controller.frame.pan_txs
-        self.ui.txs.Bind(dv.EVT_DATAVIEW_ITEM_ACTIVATED,
-                         self.on_lst_item_activated)
+        # self.ui.txs.Bind(dv.EVT_DATAVIEW_ITEM_ACTIVATED,
+        #                  self.on_lst_item_activated)
         dispatcher.connect(self.on_wallet_open, 'EVT_WALLET_OPEN')
         dispatcher.connect(self.on_wallet_new_block, 'EVT_WALLET_NEW_BLOCK')
         dispatcher.connect(self.on_wallet_history, 'EVT_WALLET_HISTORY')
         dispatcher.connect(self.on_wallet_unconfirmed_money_received,
                            'EVT_WALLET_UNCONFIRMED_MONEY_RECEIVED')
+        dispatcher.connect(self.on_lst_item_activated,
+                           'EVT_TXS_ITEM_ACTIVATED')
 
         self.ui.search.Bind(wx.EVT_TEXT_ENTER, self.on_search)
         self.ui.search.Bind(wx.EVT_TEXT, self.on_search)
         self.ui.search.Bind(wx.EVT_SEARCHCTRL_CANCEL_BTN,
                             lambda e: self.ui.search.SetValue(''))
 
-    def on_lst_item_activated(self, evt):
-        model = evt.GetModel()
-        idx = model.GetRow(evt.Item)
-        # self.currentItem = idx = evt.Index
-        item = self.data[idx][1]
-        txinfo = TxInfo(self.controller, item)
+    # def _on_lst_item_activated(self, evt):
+    #     model = evt.GetModel()
+    #     idx = model.GetRow(evt.Item)
+    #     # self.currentItem = idx = evt.Index
+    #     item = self.data[idx][1]
+    #     txinfo = TxInfo(self.controller, item)
+    #     txinfo.ui.CenterOnParent()
+    #     txinfo.ui.ShowModal()
+    #     txinfo.ui.Destroy()
+
+    def on_lst_item_activated(self, _hash):
+        txinfo = TxInfo(self.controller, _hash)
         txinfo.ui.CenterOnParent()
         txinfo.ui.ShowModal()
         txinfo.ui.Destroy()
