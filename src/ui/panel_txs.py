@@ -1,23 +1,9 @@
 import wx
 # import wx.lib.mixins.listctrl as listmix
 import wx.dataview as dv
+from lib.wallet import Wallet
 
 _ = wx.GetTranslation
-
-
-# class ListCtrl(wx.ListCtrl, listmix.ListCtrlAutoWidthMixin):
-#     def __init__(self, *args, **kwargs):
-#         wx.ListCtrl.__init__(self, *args, **kwargs)
-#         listmix.ListCtrlAutoWidthMixin.__init__(self)
-#         self.data = []
-#
-#     def set_data(self, data):
-#         self.SetItemCount(len(data))
-#         self.data = data
-#
-#     def OnGetItemText(self, item, col):
-#         if self.data:
-#             return self.data[item][col]
 
 
 class TXModel(dv.DataViewIndexListModel):
@@ -67,32 +53,13 @@ class TxsPanel(wx.Panel):
         self.search.ShowCancelButton(True)
         sizer.Add(self.search, 0, wx.EXPAND, 0)
 
-        # self.txs = ListCtrl(
-        #     self,
-        #     style=wx.LC_HRULES | wx.LC_REPORT | wx.LC_VIRTUAL | wx.LC_VRULES
-        # )
-        self.txs = DataViewCtrl(self,
-                                style=0  # wx.BORDER_THEME
-                                | dv.DV_ROW_LINES
-                                # | dv.DV_HORIZ_RULES
-                                # | dv.DV_VERT_RULES
-                                # | dv.DV_MULTIPLE
-                                )
-
-        # self.model = TXModel(data)
-        # self.dvc.AssociateModel(self.model)
+        self.txs = DataViewCtrl(self, style=dv.DV_ROW_LINES)
 
         self.txs.AppendTextColumn(_("Status"), 0, width=120)
         self.txs.AppendTextColumn(_("Hash"), 1, width=140)
         self.txs.AppendTextColumn(_("Date"), 2, width=140)
         self.txs.AppendTextColumn(_("Note"), 3, width=120)
         self.txs.AppendTextColumn(_("Amount"), 4, width=120)
-
-        # self.txs.SetColumnWidth(0, 120)
-        # self.txs.SetColumnWidth(1, 140)
-        # self.txs.SetColumnWidth(2, 140)
-        # self.txs.SetColumnWidth(3, 120)
-        # self.txs.SetColumnWidth(4, wx.LIST_AUTOSIZE)
 
         sizer.Add(self.txs, 1, wx.EXPAND, 0)
 
@@ -101,19 +68,31 @@ class TxsPanel(wx.Panel):
         self.txs.Bind(dv.EVT_DATAVIEW_ITEM_CONTEXT_MENU,
                       self.on_lst_item_context_menu)
 
-        self.Bind(wx.EVT_MENU, self.on_open_explorer,
-                  id=self.TP_OPEN_EXPLORER_ID)
+        if Wallet.nettype == 0:
+            self.Bind(wx.EVT_MENU, self.on_open_explorer,
+                      id=self.TP_OPEN_EXPLORER_ID)
 
     def on_lst_item_context_menu(self, evt):
+        item = self.txs.GetSelection()
         menu = wx.Menu()
-        menu.Append(self.TP_OPEN_EXPLORER_ID, _("Open in explorer"))
-        menu.Append(self.TP_TX_INFO, _("Tx info"))
+        mitem = menu.Append(self.TP_OPEN_EXPLORER_ID, _("Open in explorer"))
+        mitem.Enable(False if item.ID is None or Wallet.nettype != 0 else True)
+        mitem = menu.Append(self.TP_TX_INFO, _("Tx info"))
+        mitem.Enable(False if item.ID is None else True)
         self.PopupMenu(menu)
         menu.Destroy()
 
     def on_open_explorer(self, evt):
         import webbrowser
         item = self.txs.GetSelection()
+        if item.ID is None:
+            # This should never happen because we disable
+            # the menu items when there is no selection
+            dlg = wx.MessageDialog(self, "Please select a transaction",
+                                   "Error", wx.CLOSE | wx.ICON_ERROR)
+            dlg.ShowModal()
+            dlg.Destroy()
+            return
         model = self.txs.Model
         _hash = model.GetValue(item, 1)
         # print(_hash)
